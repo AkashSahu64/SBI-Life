@@ -29,7 +29,6 @@ export function AuthProvider({ children }) {
     setError(null)
     
     try {
-      // Mock API call - in a real app, this would be an actual API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Mock user data

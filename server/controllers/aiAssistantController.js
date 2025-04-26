@@ -2,9 +2,7 @@ import AiInteraction from '../models/aiInteractionModel.js';
 import Recommendation from '../models/recommendationModel.js';
 import { generateAiResponse, generatePolicyRecommendations } from '../services/aiService.js';
 
-// @desc    Get response from AI assistant
-// @route   POST /api/ai/assistant
-// @access  Private
+
 export const getAiAssistantResponse = async (req, res) => {
   try {
     const { query, sessionId } = req.body;
@@ -57,9 +55,7 @@ export const getAiAssistantResponse = async (req, res) => {
   }
 };
 
-// @desc    Get policy recommendations from AI
-// @route   POST /api/ai/recommend
-// @access  Private
+
 export const getAiRecommendations = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -98,9 +94,7 @@ export const getAiRecommendations = async (req, res) => {
   }
 };
 
-// @desc    Save feedback for AI interaction
-// @route   POST /api/ai/feedback
-// @access  Private
+
 export const saveAiFeedback = async (req, res) => {
   try {
     const { interactionId, rating, comments, helpful } = req.body;

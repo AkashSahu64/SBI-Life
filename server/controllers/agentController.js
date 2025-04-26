@@ -2,9 +2,7 @@ import User from '../models/userModel.js';
 import Recommendation from '../models/recommendationModel.js';
 import { simulateScenario } from '../services/aiService.js';
 
-// @desc    Get list of customers
-// @route   GET /api/agent/customers
-// @access  Private/Agent
+
 export const getCustomers = async (req, res) => {
   try {
     // Agents can only see users (not other agents or admins)
@@ -25,9 +23,6 @@ export const getCustomers = async (req, res) => {
   }
 };
 
-// @desc    Get customer insights
-// @route   GET /api/agent/insights/:userId
-// @access  Private/Agent
 export const getCustomerInsights = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -87,9 +82,6 @@ export const getCustomerInsights = async (req, res) => {
   }
 };
 
-// @desc    Simulate a scenario for upsell testing
-// @route   POST /api/agent/simulate
-// @access  Private/Agent
 export const simulateUpsellScenario = async (req, res) => {
   try {
     const { userId, scenario } = req.body;

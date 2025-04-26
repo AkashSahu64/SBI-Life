@@ -2,9 +2,7 @@ import { sendEmail } from '../services/emailService.js';
 import { sendWhatsAppMessage } from '../services/whatsappService.js';
 import Notification from '../models/notificationModel.js';
 
-// @desc    Send email notification
-// @route   POST /api/notify/email
-// @access  Private
+
 export const sendEmailNotification = async (req, res) => {
   try {
     const { userId, subject, message, type, priority, relatedTo } = req.body;
@@ -54,9 +52,7 @@ export const sendEmailNotification = async (req, res) => {
   }
 };
 
-// @desc    Send WhatsApp notification
-// @route   POST /api/notify/whatsapp
-// @access  Private
+
 export const sendWhatsAppNotification = async (req, res) => {
   try {
     const { userId, message, type, priority, relatedTo } = req.body;

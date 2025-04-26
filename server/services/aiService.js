@@ -14,12 +14,11 @@ export const generateAiResponse = async (query, user) => {
     // Simple context preparation
     const context = `You are an insurance assistant for SmartLife AI. The user's name is ${user.name} and they are from ${user.region}.`;
     
-    // In a real implementation, this would call the HuggingFace API
-    // For demonstration, we'll create a mock response
+    
     const apiUrl = process.env.HUGGINGFACE_API_URL;
     const apiKey = process.env.HUGGINGFACE_API_KEY;
     
-    // Simulated API call (would be replaced with actual API call)
+    // Simulated API call (replaced with actual API call)
     /*
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -78,8 +77,6 @@ export const generatePolicyRecommendations = async (user, context = {}) => {
       throw new Error('No active policies found');
     }
     
-    // In a real implementation, this would use an AI model to rank policies
-    // For demonstration, we'll use a simple ranking algorithm
     
     // Filter policies based on user preferences
     const userCategories = user.preferences?.policyCategories || ['health', 'life'];

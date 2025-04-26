@@ -3,9 +3,7 @@ import Policy from '../models/policyModel.js';
 import AiInteraction from '../models/aiInteractionModel.js';
 import { generatePurchasePrediction, generateUserSegment } from '../services/aiService.js';
 
-// @desc    Predict purchase likelihood
-// @route   POST /api/analytics/predict
-// @access  Private
+
 export const predictPurchaseLikelihood = async (req, res) => {
   try {
     const { policyId, userBehavior } = req.body;
@@ -50,9 +48,7 @@ export const predictPurchaseLikelihood = async (req, res) => {
   }
 };
 
-// @desc    Get behavior trend analysis
-// @route   GET /api/analytics/trends
-// @access  Private/Admin
+
 export const getBehaviorTrends = async (req, res) => {
   try {
     // Get AI interactions for trend analysis
@@ -120,9 +116,7 @@ export const getBehaviorTrends = async (req, res) => {
   }
 };
 
-// @desc    Generate AI-driven user segmentation
-// @route   POST /api/analytics/segment
-// @access  Private/Admin
+
 export const segmentUsers = async (req, res) => {
   try {
     const { criteria } = req.body;
