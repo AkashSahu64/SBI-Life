@@ -10,8 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate()
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
-  
-  // Mock notifications data
+
   const notifications = [
     {
       id: 1,
@@ -38,7 +37,7 @@ const Navbar = () => {
       unread: false,
     },
   ]
-  
+
   const handleLogout = () => {
     logout()
     navigate('/login')
@@ -48,11 +47,11 @@ const Navbar = () => {
     setShowNotifications(false)
     navigate('/notifications', { state: { selectedNotification: notification } })
   }
-  
+
   return (
     <nav className="bg-dark-800 border-b border-dark-700 sticky top-0 z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Left section */}
           <div className="flex items-center">
             {/* Mobile menu button */}
@@ -75,7 +74,7 @@ const Navbar = () => {
                 />
               </svg>
             </button>
-            
+
             {/* Logo */}
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/dashboard')}>
               <span className="font-bold text-xl text-white">
@@ -83,12 +82,12 @@ const Navbar = () => {
               </span>
             </div>
           </div>
-          
+
           {/* Right section */}
           <div className="flex items-center space-x-4">
             {/* Notifications */}
             <div className="relative">
-              <button 
+              <button
                 className="text-gray-400 hover:text-white relative"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
@@ -110,7 +109,7 @@ const Navbar = () => {
                   <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-accent-500"></span>
                 )}
               </button>
-              
+
               {/* Notifications dropdown */}
               <AnimatePresence>
                 {showNotifications && (
@@ -128,7 +127,7 @@ const Navbar = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     <div className="max-h-96 overflow-y-auto">
                       {notifications.map((notification) => (
                         <div
@@ -139,11 +138,15 @@ const Navbar = () => {
                           }`}
                         >
                           <div className="flex items-start">
-                            <div className={`h-2 w-2 mt-2 rounded-full flex-shrink-0 ${
-                              notification.type === 'warning' ? 'bg-warning' :
-                              notification.type === 'success' ? 'bg-success' :
-                              'bg-primary-500'
-                            }`}></div>
+                            <div
+                              className={`h-2 w-2 mt-2 rounded-full flex-shrink-0 ${
+                                notification.type === 'warning'
+                                  ? 'bg-warning'
+                                  : notification.type === 'success'
+                                  ? 'bg-success'
+                                  : 'bg-primary-500'
+                              }`}
+                            ></div>
                             <div className="ml-3 flex-1">
                               <p className="text-sm font-medium text-white">
                                 {notification.title}
@@ -159,9 +162,9 @@ const Navbar = () => {
                         </div>
                       ))}
                     </div>
-                    
+
                     <div className="p-4 border-t border-dark-600">
-                      <button 
+                      <button
                         className="w-full text-center text-sm text-primary-500 hover:text-primary-400"
                         onClick={() => {
                           setShowNotifications(false)
@@ -175,9 +178,9 @@ const Navbar = () => {
                 )}
               </AnimatePresence>
             </div>
-            
+
             {/* Help button */}
-            <button 
+            <button
               className="text-gray-400 hover:text-white"
               onClick={() => navigate('/assistant')}
             >
@@ -196,7 +199,7 @@ const Navbar = () => {
                 />
               </svg>
             </button>
-            
+
             {/* Profile dropdown */}
             <div className="relative">
               <button
@@ -210,7 +213,7 @@ const Navbar = () => {
                   alt="Profile"
                 />
               </button>
-              
+
               {/* Profile dropdown menu */}
               {showProfileMenu && (
                 <motion.div
