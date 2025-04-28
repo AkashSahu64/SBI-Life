@@ -62,7 +62,7 @@ app.use('/api/notify', notificationRoutes);
 // Error handler middleware
 app.use(errorHandler);
 
-// Handle 404 routes
+// error Handle 404 routes
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
