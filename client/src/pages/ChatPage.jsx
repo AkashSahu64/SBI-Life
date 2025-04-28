@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import axios from 'axios'
 
 const ChatPage = () => {
   const { currentUser } = useAuth()
@@ -10,8 +11,7 @@ const ChatPage = () => {
   const [showSuggestions, setShowSuggestions] = useState(true)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
-  
-  // Common insurance queries and suggestions
+
   const suggestions = [
     {
       title: 'Policy Information',
@@ -41,8 +41,7 @@ const ChatPage = () => {
       ],
     },
   ]
-  
-  // Predefined quick replies
+
   const quickReplies = [
     'Compare Policies',
     'Renew Policy',
@@ -51,8 +50,7 @@ const ChatPage = () => {
     'Premium Details',
     'Cancel Policy',
   ]
-  
-  // Initial greeting from assistant
+
   useEffect(() => {
     setTimeout(() => {
       const initialMessages = [
@@ -65,82 +63,131 @@ const ChatPage = () => {
       ]
       setMessages(initialMessages)
     }, 1000)
-    
+
     if (inputRef.current) {
       inputRef.current.focus()
     }
   }, [currentUser])
-  
-  // Scroll to bottom on new messages
+
   useEffect(() => {
     scrollToBottom()
   }, [messages])
-  
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
-  
-  // Handle sending a message
-  const handleSendMessage = (text = inputValue) => {
-    if (!text.trim()) return
-    
-    setShowSuggestions(false)
-    
-    // Add user message
-    const userMessage = {
-      id: messages.length + 1,
-      sender: 'user',
-      text,
-      timestamp: new Date(),
-    }
-    
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue('')
-    setIsTyping(true)
-    
-    // Simulate AI response
-    setTimeout(() => {
-      let response
-      
-      // Generate appropriate responses based on user input
-      const lowercaseText = text.toLowerCase()
-      
-      if (lowercaseText.includes('compare') || lowercaseText.includes('policies')) {
-        response = "I can help you compare policies. Based on your profile, I recommend comparing our 'SmartLife Term Secure+' and 'SmartLife Family Shield' plans. Would you like to see a detailed comparison?"
-      } else if (lowercaseText.includes('renew') || lowercaseText.includes('renewal')) {
-        response = "Your vehicle policy (POL-9012) is due for renewal in 10 days. Would you like me to process the renewal now? The premium amount is ₹12,300."
-      } else if (lowercaseText.includes('claim') || lowercaseText.includes('file')) {
-        response = "I can help you file a claim. Please specify which policy you're filing a claim for, and briefly describe the incident. You'll also need to upload relevant documents."
-      } else if (lowercaseText.includes('coverage') || lowercaseText.includes('cover')) {
-        response = "Your SmartLife Health Max policy (POL-1234) provides coverage of ₹15,00,000 for hospitalization, medical procedures, and includes pre and post hospitalization expenses. Would you like more specific details about any aspect of your coverage?"
-      } else if (lowercaseText.includes('premium') || lowercaseText.includes('payment')) {
-        response = "Your next premium payment of ₹24,500 for SmartLife Health Max is due on April 15, 2025. Would you like to set up an automatic payment or get a payment reminder?"
-      } else if (lowercaseText.includes('cancel')) {
-        response = "I understand you're considering cancellation. Before proceeding, may I ask why you'd like to cancel your policy? Perhaps we can find an alternative solution that better meets your needs."
-      } else if (lowercaseText.includes('hello') || lowercaseText.includes('hi')) {
-        response = `Hello ${currentUser?.name}! How can I help you with your insurance needs today?`
+
+  const formatResponse = (responseText) => {
+    if (!responseText) return '';
+    const lines = responseText.split('\n').map(line => line.trim());
+    const formattedLines = [];
+
+    lines.forEach(line => {
+      if (!line) return;
+      if (line.startsWith('*')) {
+        const cleanedLine = line.slice(1).trim();
+        const keyValueMatch = cleanedLine.match(/^(.+?):\s*(.+)$/);
+
+        if (keyValueMatch) {
+          const key = keyValueMatch[1].trim();
+          const value = keyValueMatch[2].trim();
+          formattedLines.push(`<strong>${key}:</strong> ${value}`);
+        } else {
+          formattedLines.push(cleanedLine);
+        }
       } else {
-        response = "I understand you're asking about " + text + ". Let me help you with that. Based on your current policies and profile, I can provide personalized assistance. Could you please provide more specific details about what you'd like to know?"
+        formattedLines.push(line);
       }
-      
-      // Add AI response
-      const aiMessage = {
-        id: messages.length + 2,
+    });
+
+    return formattedLines.join('<br/><br/>');
+  };
+
+  const handleSendMessage = async (userMessage = inputValue) => {
+    if (!userMessage.trim()) return;
+
+    setInputValue('');
+    setShowSuggestions(false);
+
+    const userMsg = {
+      id: Date.now(),
+      sender: 'user',
+      text: userMessage,
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, userMsg]);
+
+    setIsTyping(true);
+
+    try {
+      const apiKey = 'zut_T3od_edjaomE2rOzYbWgR-0cfotUD6itpXjfaQ';
+      const response = await fetch('https://api.vectara.io/v2/query', {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ0NGE4NTA5LTM3MTUtNGUyYy1hNjZm...`,
+        },
+        body: JSON.stringify({
+          query: userMessage,
+          search: {
+            corpora: [{
+              corpus_key: apiKey,
+              metadata_filter: '',
+              lexical_interpolation: 0.005,
+              custom_dimensions: {}
+            }],
+            offset: 0,
+            limit: 25,
+            context_configuration: {
+              sentences_before: 2,
+              sentences_after: 2,
+              start_tag: '%START_SNIPPET%',
+              end_tag: '%END_SNIPPET%'
+            },
+            reranker: { type: 'mmr', diversity_bias: 0 }
+          },
+          generation: {
+            generation_preset_name: 'mockingbird-1.0-2024-07-16',
+            max_used_search_results: 5,
+            response_language: 'eng',
+            enable_factual_consistency_score: true
+          },
+          save_history: true
+        })
+      });
+
+      const data = await response.json();
+      const summary = data.summary || 'Sorry, no relevant answer found.';
+      const formattedResponse = formatResponse(summary);
+
+      const botMessage = {
+        id: Date.now() + 1,
         sender: 'assistant',
-        text: response,
+        text: formattedResponse,
         timestamp: new Date(),
-      }
-      
-      setMessages((prev) => [...prev, aiMessage])
-      setIsTyping(false)
-    }, 1500)
-  }
-  
-  // Format timestamp
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+      setIsTyping(false);
+    } catch (error) {
+      console.error('Error fetching bot reply:', error);
+      const botMessage = {
+        id: Date.now() + 2,
+        sender: 'assistant',
+        text: 'Oops! Something went wrong. Please try again.',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, botMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
   const formatTime = (date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
-  
+
   return (
     <div className="flex flex-col h-[calc(100vh-12rem)]">
       <div className="mb-6">
@@ -149,7 +196,7 @@ const ChatPage = () => {
           Your 24/7 AI assistant for all insurance queries
         </p>
       </div>
-      
+
       <div className="flex flex-col flex-1 bg-dark-800 rounded-xl overflow-hidden border border-dark-700">
         {/* Chat header */}
         <div className="bg-dark-700 p-4 border-b border-dark-600">
@@ -176,8 +223,7 @@ const ChatPage = () => {
             </div>
           </div>
         </div>
-        
-        {/* Chat messages */}
+
         <div className="flex-1 p-4 overflow-y-auto">
           {/* Welcome suggestions */}
           {showSuggestions && messages.length === 1 && (
@@ -209,7 +255,7 @@ const ChatPage = () => {
               ))}
             </motion.div>
           )}
-          
+
           <AnimatePresence>
             {messages.map((message) => (
               <motion.div
@@ -218,11 +264,9 @@ const ChatPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className={`flex mb-4 ${
-                  message.sender === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex mb-4 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {message.sender === 'assistant' && (
+                  {message.sender === 'assistant' && (
                   <div className="h-8 w-8 rounded-full bg-primary-500/20 flex items-center justify-center mr-2 mt-1">
                     <svg
                       className="h-5 w-5 text-primary-500"
@@ -240,26 +284,24 @@ const ChatPage = () => {
                     </svg>
                   </div>
                 )}
-                
                 <div
-                  className={`max-w-xs sm:max-w-md rounded-lg px-4 py-2 ${
-                    message.sender === 'user'
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-dark-700 text-gray-200'
-                  }`}
+                  className={`max-w-xs sm:max-w-md rounded-lg px-4 py-2 ${message.sender === 'user' ? 'bg-primary-500 text-white' : 'bg-dark-700 text-gray-200'}`}
                 >
-                  <p>{message.text}</p>
+                  {message.sender === 'assistant' ? (
+                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                  ) : (
+                    <p>{message.text}</p>
+                  )}
                   <div
-                    className={`text-xs mt-1 ${
-                      message.sender === 'user'
+                    className={`text-xs mt-1 ${message.sender === 'user'
                         ? 'text-primary-200'
                         : 'text-gray-400'
-                    }`}
+                      }`}
                   >
                     {formatTime(message.timestamp)}
                   </div>
                 </div>
-                
+
                 {message.sender === 'user' && (
                   <div className="h-8 w-8 rounded-full overflow-hidden ml-2 mt-1">
                     <img
@@ -271,8 +313,7 @@ const ChatPage = () => {
                 )}
               </motion.div>
             ))}
-            
-            {/* Typing indicator */}
+
             {isTyping && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -304,11 +345,11 @@ const ChatPage = () => {
                 </div>
               </motion.div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </AnimatePresence>
         </div>
-        
+
         {/* Quick replies */}
         {messages.length > 0 && (
           <div className="px-4 py-3 border-t border-dark-600 bg-dark-800 overflow-x-auto flex space-x-2 no-scrollbar">
@@ -323,7 +364,7 @@ const ChatPage = () => {
             ))}
           </div>
         )}
-        
+
         {/* Input area */}
         <div className="px-4 py-3 border-t border-dark-600 bg-dark-700">
           <form
@@ -353,7 +394,7 @@ const ChatPage = () => {
                 />
               </svg>
             </button>
-            
+
             <input
               type="text"
               ref={inputRef}
@@ -362,15 +403,13 @@ const ChatPage = () => {
               placeholder="Type your message..."
               className="flex-1 bg-dark-600 border border-dark-500 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
-            
             <button
               type="submit"
               disabled={!inputValue.trim() || isTyping}
-              className={`rounded-full p-2 ${
-                inputValue.trim() && !isTyping
+              className={`rounded-full p-2 ${inputValue.trim() && !isTyping
                   ? 'bg-primary-500 hover:bg-primary-600 text-white'
                   : 'bg-dark-600 text-gray-500 cursor-not-allowed'
-              }`}
+                }`}
             >
               <svg
                 className="h-5 w-5"
@@ -394,4 +433,4 @@ const ChatPage = () => {
   )
 }
 
-export default ChatPage
+export default ChatPage;
