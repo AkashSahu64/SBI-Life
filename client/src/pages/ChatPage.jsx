@@ -118,6 +118,9 @@ const ChatPage = () => {
     setMessages(prev => [...prev, userMsg]);
 
     setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+    }, 6000); 
 
     try {
       const apiKey = 'zut_T3od_edjaomE2rOzYbWgR-0cfotUD6itpXjfaQ';
@@ -169,7 +172,6 @@ const ChatPage = () => {
       };
 
       setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
     } catch (error) {
       console.error('Error fetching bot reply:', error);
       const botMessage = {
@@ -180,7 +182,7 @@ const ChatPage = () => {
       };
       setMessages(prev => [...prev, botMessage]);
     } finally {
-      setIsTyping(false);
+      setIsTyping(false); // Stop typing indicator
     }
   };
 
