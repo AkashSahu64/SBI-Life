@@ -31,9 +31,7 @@ export const upload = multer({
   fileFilter
 });
 
-// @desc    Generate a report
-// @route   POST /api/report/generate
-// @access  Private
+
 export const createReport = async (req, res) => {
   try {
     const { name, type, format, parameters } = req.body;
@@ -72,9 +70,7 @@ export const createReport = async (req, res) => {
   }
 };
 
-// @desc    Download a report
-// @route   GET /api/report/download/:fileId
-// @access  Private
+
 export const downloadReport = async (req, res) => {
   try {
     const { fileId } = req.params;
@@ -97,7 +93,7 @@ export const downloadReport = async (req, res) => {
       });
     }
     
-    // Redirect to the file URL (in a real app, could stream file from cloud storage)
+    // Redirect to the file URL 
     res.redirect(report.fileUrl);
   } catch (error) {
     res.status(500).json({

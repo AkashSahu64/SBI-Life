@@ -1,8 +1,6 @@
 import Policy from '../models/policyModel.js';
 
-// @desc    Get all policies
-// @route   GET /api/policies
-// @access  Private
+
 export const getPolicies = async (req, res) => {
   try {
     const { category, active } = req.query;
@@ -33,9 +31,7 @@ export const getPolicies = async (req, res) => {
   }
 };
 
-// @desc    Create a policy
-// @route   POST /api/policies
-// @access  Private/Admin
+
 export const createPolicy = async (req, res) => {
   try {
     // Add user ID to the policy
@@ -55,9 +51,6 @@ export const createPolicy = async (req, res) => {
   }
 };
 
-// @desc    Update a policy
-// @route   PUT /api/policies/:id
-// @access  Private/Admin
 export const updatePolicy = async (req, res) => {
   try {
     let policy = await Policy.findById(req.params.id);
@@ -86,9 +79,7 @@ export const updatePolicy = async (req, res) => {
   }
 };
 
-// @desc    Delete a policy
-// @route   DELETE /api/policies/:id
-// @access  Private/Admin
+
 export const deletePolicy = async (req, res) => {
   try {
     const policy = await Policy.findById(req.params.id);
@@ -114,9 +105,7 @@ export const deletePolicy = async (req, res) => {
   }
 };
 
-// @desc    Compare multiple policies
-// @route   POST /api/policies/compare
-// @access  Private
+
 export const comparePolicies = async (req, res) => {
   try {
     const { policyIds } = req.body;

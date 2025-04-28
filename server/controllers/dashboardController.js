@@ -3,9 +3,7 @@ import Claim from '../models/claimModel.js';
 import Recommendation from '../models/recommendationModel.js';
 import Notification from '../models/notificationModel.js';
 
-// @desc    Get dashboard overview data
-// @route   GET /api/dashboard
-// @access  Private
+
 export const getDashboardOverview = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -77,9 +75,7 @@ export const getDashboardOverview = async (req, res) => {
   }
 };
 
-// @desc    Get recommendations for dashboard
-// @route   GET /api/dashboard/recommendations
-// @access  Private
+
 export const getDashboardRecommendations = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -106,9 +102,7 @@ export const getDashboardRecommendations = async (req, res) => {
   }
 };
 
-// @desc    Get notifications for dashboard
-// @route   GET /api/dashboard/notifications
-// @access  Private
+
 export const getDashboardNotifications = async (req, res) => {
   try {
     const userId = req.user._id;
