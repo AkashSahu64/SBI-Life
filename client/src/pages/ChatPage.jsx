@@ -189,8 +189,8 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)]">
-      <div className="mb-6">
+    <div className="flex flex-col h-[calc(100vh-7.5rem)]">
+      <div className="m-2">
         <h1 className="text-2xl font-bold text-white">Virtual Assistant</h1>
         <p className="text-gray-400">
           Your 24/7 AI assistant for all insurance queries
