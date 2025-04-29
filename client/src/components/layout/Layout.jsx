@@ -8,13 +8,16 @@ import { AnimatePresence, motion } from 'framer-motion'
 const Layout = () => {
   const { isAuthenticated } = useAuth()
   const { sidebarOpen, NotificationsRenderer } = useUI()
-  
+
   if (!isAuthenticated) {
     return <Outlet />
   }
-  
+
   return (
-    <div className="min-h-screen bg-dark-900 text-gray-100 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-dark-900 text-gray-100 flex flex-col">
+      {/* Navbar at the top */}
+      <Navbar />
+
       {/* Mobile sidebar overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -26,22 +29,24 @@ const Layout = () => {
           />
         )}
       </AnimatePresence>
-      
-      {/* Sidebar */}
-      <Sidebar />
-      
-      {/* Main content */}
-      <main className="flex-1">
-        <Navbar />
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="p-4 md:p-6 max-w-7xl mx-auto"
-        >
-          <Outlet />
-        </motion.div>
-      </main>
-      
+
+      {/* Below Navbar: Sidebar and Main Content side by side */}
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <Sidebar />
+
+        {/* Main content */}
+        <main className="flex-1 overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="p-4 md:p-6 max-w-7xl mx-auto"
+          >
+            <Outlet />
+          </motion.div>
+        </main>
+      </div>
+
       {/* Notifications */}
       <NotificationsRenderer />
     </div>

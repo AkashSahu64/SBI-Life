@@ -118,6 +118,9 @@ const ChatPage = () => {
     setMessages(prev => [...prev, userMsg]);
 
     setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+    }, 6000); 
 
     try {
       const apiKey = 'zut_T3od_edjaomE2rOzYbWgR-0cfotUD6itpXjfaQ';
@@ -169,7 +172,6 @@ const ChatPage = () => {
       };
 
       setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
     } catch (error) {
       console.error('Error fetching bot reply:', error);
       const botMessage = {
@@ -180,7 +182,7 @@ const ChatPage = () => {
       };
       setMessages(prev => [...prev, botMessage]);
     } finally {
-      setIsTyping(false);
+      setIsTyping(false); // Stop typing indicator
     }
   };
 
@@ -189,8 +191,8 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)]">
-      <div className="mb-6">
+    <div className="flex flex-col h-[calc(100vh-7.1rem)]">
+      <div className="mb-2 -mt-3">
         <h1 className="text-2xl font-bold text-white">Virtual Assistant</h1>
         <p className="text-gray-400">
           Your 24/7 AI assistant for all insurance queries
@@ -199,7 +201,7 @@ const ChatPage = () => {
 
       <div className="flex flex-col flex-1 bg-dark-800 rounded-xl overflow-hidden border border-dark-700">
         {/* Chat header */}
-        <div className="bg-dark-700 p-4 border-b border-dark-600">
+        <div className="bg-dark-700 p-3 border-b border-dark-600">
           <div className="flex items-center">
             <div className="h-10 w-10 rounded-full bg-primary-500/20 flex items-center justify-center mr-3">
               <svg

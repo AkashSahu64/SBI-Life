@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
-import { connectDB } from './config/db.js';
+import  connectDB  from './config/db.js';
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
@@ -25,9 +25,6 @@ dotenv.config();
 
 // Initialize Express app
 const app = express();
-
-// Connect to MongoDB
-connectDB();
 
 // Middleware
 app.use(express.json());
@@ -65,15 +62,17 @@ app.use('/api/notify', notificationRoutes);
 // Error handler middleware
 app.use(errorHandler);
 
-// Handle 404 routes
+// error Handle 404 routes
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+  });
 });
 
 // Handle unhandled promise rejections
