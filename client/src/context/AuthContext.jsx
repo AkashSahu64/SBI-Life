@@ -31,15 +31,14 @@ export function AuthProvider({ children }) {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
       
-      // Mock user data
       const user = {
         id: '123456',
-        name: 'Test User',
-        email: credentials.email || 'test.doe@example.com',
+        name: 'Amitabh Desai',
+        email: credentials.email || 'amitabhdesai@gmail.com',
         phone: credentials.phone || '+91 9876543210',
         policyNumbers: ['SBI-LIFE-1234', 'SBI-LIFE-5678'],
-        role: 'customer', // or 'agent'
-        profilePicture: 'https://i.pravatar.cc/150?img=32',
+        role: 'customer',
+        profilePicture: 'https://media.licdn.com/dms/image/v2/D5603AQHOoQ1adxtM3g/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1677605929219?e=2147483647&v=beta&t=ZapgjVyCubCvs276DRgMh-ODSHJ79BCK36iqS0imiD8',
         authMethod: method,
       }
       
