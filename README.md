@@ -50,9 +50,9 @@ We’ve integrated the **LLaMA model (Hugging Face)** to power a smart AI chatbo
 
 ## 🖥️ Panels & Features
 
-### 👨‍💼 Agent Panel *(Coming Soon)*
-- Agent dashboard
-- Policy and lead management
+### 👨‍💼 Agent Panel *(To discuss agent)*
+- Agent dashboard *(go through url agent-dashboard)*
+- Policy and lead management *(Coming Soon)*
 
 ### 👤 User Panel
 - Personalized dashboard
@@ -130,7 +130,7 @@ npm run dev
 
 ## 🌐 Live Demo
 
-- **Frontend:** [smartlife-ai.vercel.app](https://smartlife-ai.vercel.app)
+- **Frontend:** [https://sbi-life-seven.vercel.app/](https://sbi-life-seven.vercel.app/)
 
 ---
 
